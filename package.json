@@ -3,6 +3,7 @@
   "displayName": "tespoyo",
   "description": "test your code",
   "version": "0.0.1",
+  "repository": "https://github.com/ykpythemind/tespoyo",
   "engines": {
     "vscode": "^1.75.0"
   },
