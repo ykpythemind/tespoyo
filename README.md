@@ -22,9 +22,10 @@ This extension contributes the following settings:
 ```
 {
   "tespoyo": {
-    "languages": {
+    "commands": {
       "ruby": {
-        "command": "bundle exec rake ${file}:${line}"
+        "line": "bundle exec rake ${file}:${line}",
+        "file": "bundle exec rake ${file}"
       }
     }
   }

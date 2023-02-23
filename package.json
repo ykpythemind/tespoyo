@@ -3,7 +3,7 @@
   "displayName": "tespoyo",
   "description": "test your code",
   "publisher": "ykpythemind",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "https://github.com/ykpythemind/tespoyo",
   "engines": {
     "vscode": "^1.75.0"
@@ -11,15 +11,20 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:tespoyo.testFile"
-  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
         "command": "tespoyo.testFile",
-        "title": "Test File on terminal"
+        "title": "Run test (current file) on terminal"
+      },
+      {
+        "command": "tespoyo.testLine",
+        "title": "Run test (current line) on terminal"
+      },
+      {
+        "command": "tespoyo.testAll",
+        "title": "Run test on terminal"
       }
     ]
   },
