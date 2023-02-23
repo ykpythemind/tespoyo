@@ -27,12 +27,7 @@ export function activate(context: vscode.ExtensionContext) {
       console.debug(path);
       command = command.replace(/\$\{file\}/g, path);
 
-      await vscode.commands.executeCommand(
-        "workbench.action.terminal.sendSequence",
-        {
-          text: `${command}\n`,
-        }
-      );
+      await launchTestOnTerminal(command);
     })
   );
   disposables.push(
@@ -53,12 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
       command = command.replace(/\$\{file\}/g, path);
       command = command.replace(/\$\{line\}/g, line.toString());
 
-      await vscode.commands.executeCommand(
-        "workbench.action.terminal.sendSequence",
-        {
-          text: `${command}\n`,
-        }
-      );
+      await launchTestOnTerminal(command);
     })
   );
 
@@ -76,12 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      await vscode.commands.executeCommand(
-        "workbench.action.terminal.sendSequence",
-        {
-          text: `${command}\n`,
-        }
-      );
+      await launchTestOnTerminal(command);
     })
   );
 
@@ -164,6 +149,16 @@ function getTestAllCommandByLanguageId(languageId: string): string {
       return "";
     }
   }
+}
+
+async function launchTestOnTerminal(command: string) {
+  let terminal = vscode.window.activeTerminal;
+  if (vscode.window.activeTerminal === undefined) {
+    terminal = vscode.window.createTerminal("test");
+  }
+
+  terminal?.show(true);
+  terminal?.sendText(command, true);
 }
 
 // This method is called when your extension is deactivated

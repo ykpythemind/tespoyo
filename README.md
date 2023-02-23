@@ -24,8 +24,9 @@ This extension contributes the following settings:
   "tespoyo": {
     "commands": {
       "ruby": {
-        "line": "bundle exec rake ${file}:${line}",
-        "file": "bundle exec rake ${file}"
+        "line": "bundle exec rake test ${file}:${line}",
+        "file": "bundle exec rake test ${file}",
+        "all": "bundle exec rake test"
       }
     }
   }
