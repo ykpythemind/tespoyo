@@ -2,6 +2,7 @@
   "name": "tespoyo",
   "displayName": "tespoyo",
   "description": "test your code",
+  "publisher": "ykpythemind",
   "version": "0.0.1",
   "repository": "https://github.com/ykpythemind/tespoyo",
   "engines": {
