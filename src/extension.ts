@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
+let lastCommand: string | null = null;
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -19,7 +21,6 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
       const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
-      const line = editor.selection.active.line;
       let command = getTestFileCommandByLanguageId(editor.document.languageId);
       if (command === "") {
         return;
@@ -63,6 +64,18 @@ export function activate(context: vscode.ExtensionContext) {
       let command = getTestAllCommandByLanguageId(editor.document.languageId);
 
       if (command === "") {
+        return;
+      }
+
+      await launchTestOnTerminal(command);
+    })
+  );
+
+  disposables.push(
+    vscode.commands.registerCommand("tespoyo.testLast", async () => {
+      const command = lastCommand;
+
+      if (command === null) {
         return;
       }
 
@@ -156,6 +169,8 @@ async function launchTestOnTerminal(command: string) {
   if (vscode.window.activeTerminal === undefined) {
     terminal = vscode.window.createTerminal("test");
   }
+
+  lastCommand = command;
 
   terminal?.show(true);
   terminal?.sendText(command, true);
