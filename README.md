@@ -2,7 +2,7 @@
 
 You can easily run test commands in the integrated terminal.
 
-[![Screenshot](https://raw.githubusercontent.com/ykpythemind/tespoyo/main/misc/screenshot.mp4)](https://raw.githubusercontent.com/ykpythemind/tespoyo/main/misc/screenshot.mp4)
+[![Image from Gyazo](https://i.gyazo.com/c6b31643c78d888b85a4935d8ef07a60.gif)](https://gyazo.com/c6b31643c78d888b85a4935d8ef07a60)
 
 ## Extension Settings
 
