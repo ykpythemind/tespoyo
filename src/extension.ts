@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
       const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
-      const line = editor.selection.active.line;
+      const line = editor.selection.active.line + 1; // zero based + 1
       let command = getTestLineCommandByLanguageId(editor.document.languageId);
 
       if (command === "") {
