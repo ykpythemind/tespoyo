@@ -1,25 +1,14 @@
 # tespoyo
 
-## Features
+You can easily run test commands in the integrated terminal.
 
-testing
-
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+[![Screenshot](./misc/screenshot.mp4)](./misc/screenshot.mp4)
 
 ## Extension Settings
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+You can define workspace-specific settings as follows.
 
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-```
+```json
 {
   "tespoyo": {
     "commands": {
@@ -31,12 +20,13 @@ This extension contributes the following settings:
     }
   }
 }
-
 ```
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 1.0.2
+
+Bug fix
 
 ### 1.0.0
 
