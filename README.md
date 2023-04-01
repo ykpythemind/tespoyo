@@ -2,7 +2,10 @@
 
 You can easily run test commands in the integrated terminal.
 
-[![Image from Gyazo](https://i.gyazo.com/c6b31643c78d888b85a4935d8ef07a60.gif)](https://gyazo.com/c6b31643c78d888b85a4935d8ef07a60)
+<p align="center">
+  <video src="misc/screenshot.mp4" width="640" height="360" controls>
+</p>
+
 
 ## Extension Settings
 
