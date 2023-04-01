@@ -2,9 +2,10 @@
 
 You can easily run test commands in the integrated terminal.
 
-<p align="center">
-  <video src="misc/screenshot.mp4" width="640" height="360" controls>
-</p>
+
+
+https://user-images.githubusercontent.com/22209702/229293077-02ea6cca-66e1-4aa1-88e7-8fe91bd2b8ca.mp4
+
 
 
 ## Extension Settings
