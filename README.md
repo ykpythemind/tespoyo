@@ -11,6 +11,7 @@ https://user-images.githubusercontent.com/22209702/229293077-02ea6cca-66e1-4aa1-
 ## Extension Settings
 
 You can define workspace-specific settings as follows.
+( Command Palette -> `Preferences: Open Workspace Settings (JSON)` )
 
 ```json
 {
