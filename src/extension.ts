@@ -1,5 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { execFileSync } from "child_process";
 import * as vscode from "vscode";
 import { languageDefault } from "./default";
 
@@ -87,6 +88,28 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
       const line = editor.selection.active.line + 1; // zero based + 1
+
+      if (editor.document.languageId === "go") {
+        const result = execFileSync(
+          "go",
+          [
+            "run",
+            "goTest/goTest.go",
+            "-filePath",
+            path,
+            "-line",
+            line.toString(),
+          ],
+          { encoding: "utf8" }
+        );
+
+        const funcName = JSON.parse(result.toString()).FuncName;
+        console.log(funcName);
+
+        await launchTestOnTerminal(funcName);
+        return;
+      }
+
       let command = getTestLineCommandByLanguageId(editor.document.languageId);
 
       if (command === "") {
