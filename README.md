@@ -3,7 +3,8 @@
 An extension that sends and executes test commands to the integrated terminal, which has been our most recent focus.
 You can easily run test commands in the integrated terminal.
 
-[![Screenshot](https://raw.githubusercontent.com/ykpythemind/tespoyo/main/misc/screenshot.mp4)](https://raw.githubusercontent.com/ykpythemind/tespoyo/main/misc/screenshot.mp4)
+https://github.com/user-attachments/assets/fba474df-01d4-468a-8d51-3220c56637de
+
 
 ### [日本語]
 
