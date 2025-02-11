@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
+import { languageDefault } from "./default";
 
 let lastCommand: string | null = null;
 
@@ -14,6 +15,53 @@ export function activate(context: vscode.ExtensionContext) {
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   let disposables: Array<vscode.Disposable> = [];
+
+  disposables.push(
+    vscode.commands.registerCommand(
+      "tespoyo.initWorkspaceSettings",
+      async () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          return;
+        }
+
+        const config = vscode.workspace.getConfiguration("tespoyo", {
+          languageId: editor.document.languageId,
+        });
+
+        const commands = config.get("commands");
+        if (
+          commands !== undefined &&
+          isObject(commands) &&
+          commands !== null &&
+          !isObjectEmpty(commands)
+        ) {
+          vscode.window.showInformationMessage(
+            "tespoyo workspace settings already initialized"
+          );
+          return;
+        }
+
+        const c = languageDefault[editor.document.languageId];
+        if (!c) {
+          vscode.window.showWarningMessage(
+            `language ${editor.document.languageId} is not supported`
+          );
+          return;
+        }
+
+        await config.update("commands", c, false, true);
+
+        vscode.window.showInformationMessage(
+          "tespoyo workspace settings initialized"
+        );
+        await vscode.commands.executeCommand(
+          "workbench.action.openWorkspaceConfigFile" // its not working...
+        );
+      }
+    )
+  );
+
   disposables.push(
     vscode.commands.registerCommand("tespoyo.testFile", async () => {
       const editor = vscode.window.activeTextEditor;
@@ -87,81 +135,60 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function getTestLineCommandByLanguageId(languageId: string): string {
-  const config = vscode.workspace.getConfiguration("tespoyo.commands");
-  const maybeCommand = config.get<string>(`${languageId}.line`);
+  const config = vscode.workspace.getConfiguration("tespoyo.commands", {
+    languageId: languageId,
+  });
+
+  const maybeCommand = config.get<string>("line");
   if (maybeCommand) {
     return maybeCommand;
   }
 
-  switch (languageId) {
-    case "javascript": {
-      return "npm run test ${file}:${line}";
-    }
-    case "typescript": {
-      return "npm run test ${file}:${line}";
-    }
-    case "ruby": {
-      return "bin/test ${file}:${line}";
-    }
-    default: {
-      vscode.window.showWarningMessage(
-        `language ${languageId} is not supported`
-      );
-      return "";
-    }
+  const defaultCommand = languageDefault[languageId]?.line;
+  if (defaultCommand) {
+    return defaultCommand;
   }
+
+  vscode.window.showWarningMessage(`language ${languageId} is not supported`);
+  return "";
 }
 
 function getTestFileCommandByLanguageId(languageId: string): string {
-  const config = vscode.workspace.getConfiguration("tespoyo.commands");
-  const maybeCommand = config.get<string>(`${languageId}.file`);
+  const config = vscode.workspace.getConfiguration("tespoyo.commands", {
+    languageId: languageId,
+  });
+
+  const maybeCommand = config.get<string>("file");
   if (maybeCommand) {
     return maybeCommand;
   }
 
-  switch (languageId) {
-    case "javascript": {
-      return "npm run test ${file}";
-    }
-    case "typescript": {
-      return "npm run test ${file}";
-    }
-    case "ruby": {
-      return "bin/test ${file}";
-    }
-    default: {
-      vscode.window.showWarningMessage(
-        `language ${languageId} is not supported`
-      );
-      return "";
-    }
+  const defaultCommand = languageDefault[languageId]?.file;
+  if (defaultCommand) {
+    return defaultCommand;
   }
+
+  vscode.window.showWarningMessage(`language ${languageId} is not supported`);
+  return "";
 }
 
 function getTestAllCommandByLanguageId(languageId: string): string {
-  const config = vscode.workspace.getConfiguration("tespoyo.commands");
-  const maybeCommand = config.get<string>(`${languageId}.all`);
+  const config = vscode.workspace.getConfiguration("tespoyo.commands", {
+    languageId: languageId,
+  });
+
+  const maybeCommand = config.get<string>("all");
   if (maybeCommand) {
     return maybeCommand;
   }
 
-  switch (languageId) {
-    case "javascript": {
-      return "npm run test";
-    }
-    case "typescript": {
-      return "npm run test";
-    }
-    case "ruby": {
-      return "bin/test";
-    }
-    default: {
-      vscode.window.showWarningMessage(
-        `language ${languageId} is not supported`
-      );
-      return "";
-    }
+  const defaultCommand = languageDefault[languageId]?.all;
+  if (defaultCommand) {
+    return defaultCommand;
   }
+
+  vscode.window.showWarningMessage(`language ${languageId} is not supported`);
+  return "";
 }
 
 async function launchTestOnTerminal(command: string) {
@@ -174,6 +201,18 @@ async function launchTestOnTerminal(command: string) {
 
   terminal?.show(true);
   terminal?.sendText(command, true);
+}
+
+const isObjectEmpty = (obj: Object) => {
+  for (let prop in obj) {
+    if (obj.hasOwnProperty(prop)) {
+      return false;
+    }
+  }
+  return true;
+};
+function isObject(value: any) {
+  return value !== null && typeof value === "object";
 }
 
 // This method is called when your extension is deactivated
