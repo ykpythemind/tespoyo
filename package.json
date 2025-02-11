@@ -3,7 +3,7 @@
   "displayName": "tespoyo",
   "description": "test your code",
   "publisher": "ykpythemind",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "repository": "https://github.com/ykpythemind/tespoyo",
   "engines": {
     "vscode": "^1.75.0"
@@ -14,22 +14,39 @@
   "main": "./out/extension.js",
   "activationEvents": [],
   "contributes": {
+    "configuration": [
+      {
+        "title": "tespoyo commands",
+        "id": "tespoyo.commands",
+        "properties": {
+          "tespoyo.commands": {
+            "type": "object",
+            "description": "test commands",
+            "scope": "language-overridable"
+          }
+        }
+      }
+    ],
     "commands": [
       {
         "command": "tespoyo.testFile",
-        "title": "Run test (current file) on terminal"
+        "title": "tespoyo: Run test (current file)"
       },
       {
         "command": "tespoyo.testLine",
-        "title": "Run test (current line) on terminal"
+        "title": "tespoyo: Run test (current line)"
       },
       {
         "command": "tespoyo.testAll",
-        "title": "Run test on terminal"
+        "title": "tespoyo: Run all tests"
       },
       {
         "command": "tespoyo.testLast",
-        "title": "Run the most recent test on terminal"
+        "title": "tespoyo: Run the most recent test"
+      },
+      {
+        "command": "tespoyo.initWorkspaceSettings",
+        "title": "tespoyo: Initialize workspace settings for current language"
       }
     ]
   },
