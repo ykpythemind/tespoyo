@@ -1,7 +1,6 @@
 # tespoyo
 
-An extension that sends and executes test commands to the integrated terminal, which has been our most recent focus.
-You can easily run test commands in the integrated terminal.
+`tespoyo` executes test commands in the integrated terminal.
 
 https://github.com/user-attachments/assets/fba474df-01d4-468a-8d51-3220c56637de
 
@@ -23,6 +22,8 @@ https://github.com/user-attachments/assets/fba474df-01d4-468a-8d51-3220c56637de
 You can define workspace-specific settings as follows.
 
 Command Palette -> `tespoyo: Initialize workspace settings for current language`
+
+example:
 
 ```json
 {
