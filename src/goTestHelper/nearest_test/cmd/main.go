@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
 	"go/ast"
@@ -17,30 +16,31 @@ type Result struct {
 
 func main() {
 	var (
-		filePath = flag.String("filePath", "", "filePath")
+		filePath = flag.String("file", "", "file path")
 		line     = flag.Int("line", 0, "file line")
 	)
 	flag.Parse()
 
 	if *filePath == "" {
-		fmt.Println("filePath is required")
+		fmt.Fprintln(os.Stderr, "file is required")
 		os.Exit(1)
 	}
 
-	result, err := run(*filePath, *line)
+	result, err := findNearestTestFuncByLine(*filePath, *line)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 
-	err = json.NewEncoder(os.Stdout).Encode(result)
-	if err != nil {
-		fmt.Println(err)
+	if result.FuncName == "" {
+		fmt.Fprintf(os.Stderr, "No test found at line %d in %s\n", *line, *filePath)
 		os.Exit(1)
 	}
+
+	fmt.Println(result.FuncName)
 }
 
-func run(filePath string, line int) (*Result, error) {
+func findNearestTestFuncByLine(filePath string, line int) (*Result, error) {
 	body, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func run(filePath string, line int) (*Result, error) {
 		return nil, err
 	}
 
-	var result *Result
+	result := &Result{}
 
 	for _, d := range f.Decls {
 		if fd, ok := d.(*ast.FuncDecl); ok {
@@ -61,9 +61,7 @@ func run(filePath string, line int) (*Result, error) {
 				endpos := fset.Position(fd.End())
 
 				if pos.Line <= line && line < endpos.Line {
-					result = &Result{
-						FuncName: fd.Name.String(),
-					}
+					result.FuncName = fd.Name.String()
 					break
 				}
 			}
