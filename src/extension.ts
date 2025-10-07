@@ -51,6 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         await config.update("commands", c, false, true);
+        await config.update("trimPrefixes", [], false);
 
         vscode.window.showInformationMessage(
           "tespoyo workspace settings initialized"
@@ -73,8 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
       if (command === "") {
         return;
       }
-      console.debug(path);
-      command = command.replace(/\$\{file\}/g, path);
+      command = command.replace(/\$\{file\}/g, betterPath(path));
 
       await launchTestOnTerminal(command);
     })
@@ -94,7 +94,7 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       console.debug(path);
-      command = command.replace(/\$\{file\}/g, path);
+      command = command.replace(/\$\{file\}/g, betterPath(path));
       command = command.replace(/\$\{line\}/g, line.toString());
 
       await launchTestOnTerminal(command);
@@ -107,8 +107,8 @@ export function activate(context: vscode.ExtensionContext) {
       if (!editor) {
         return;
       }
-      const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
-      const line = editor.selection.active.line;
+      // const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
+      // const line = editor.selection.active.line;
       let command = getTestAllCommandByLanguageId(editor.document.languageId);
 
       if (command === "") {
@@ -132,6 +132,19 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   disposables.forEach((d) => context.subscriptions.push(d));
+}
+
+function betterPath(path: string): string {
+  const config = vscode.workspace.getConfiguration("tespoyo");
+  const testRootDirs = config.get<Array<string>>("testRootDirs") || [];
+
+  for (const prefix of testRootDirs) {
+    if (path.startsWith(prefix)) {
+      return path.replace(new RegExp(`^${prefix}/?`), "");
+    }
+  }
+
+  return path;
 }
 
 function getTestLineCommandByLanguageId(languageId: string): string {

@@ -41,7 +41,29 @@ example:
 }
 ```
 
+### Test Root Dirs
+
+`tespoyo.testRootDirs` に指定したディレクトリがパスの先頭にある場合、それをトリムしたパスを対象にテストコマンドを実行します。 monorepo環境で便利です
+
+example:
+
+```sh
+$ pwd
+/path/to/workspace/server
+
+# no testRootDirs config
+# it is not working when you are in the server directory, not in the workspace root
+$ bundle exec rspec server/spec/foo_spec.rb
+
+# with testRootDirs config: ["server"]
+$ bundle exec rspec spec/foo_spec.rb
+```
+
 ## Release Notes
+
+### 1.0.4
+
+monorepo環境でテストコマンドを実行したいときに便利なオプション `tespoyo.testRootDirs` を追加.
 
 ### 1.0.3
 
