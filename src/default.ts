@@ -20,4 +20,8 @@ export const languageDefault: Record<string, CommandConfig> = {
     line: "bundle exec rspec ${file}:${line}",
     all: "bundle exec rspec",
   },
+  go: {
+    line: 'go test ./... -run "${funcName}$"',
+    all: "go test ./...",
+  },
 };
