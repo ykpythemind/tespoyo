@@ -70,11 +70,3 @@ func findNearestTestFuncByLine(filePath string, line int) (*Result, error) {
 
 	return result, nil
 }
-
-func TestHoge() {
-	fmt.Println("TestHoge")
-}
-
-func TestFuga() {
-	fmt.Println("TestFuga")
-}

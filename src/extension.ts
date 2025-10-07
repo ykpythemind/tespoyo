@@ -1,6 +1,6 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { execFileSync } from "child_process";
+import { execFileSync, spawnSync } from "child_process";
 import * as vscode from "vscode";
 import { languageDefault } from "./default";
 
@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         await config.update("commands", c, false, true);
-        await config.update("trimPrefixes", [], false);
+        await config.update("testRootDirs", [], false);
 
         vscode.window.showInformationMessage(
           "tespoyo workspace settings initialized"
@@ -70,6 +70,14 @@ export function activate(context: vscode.ExtensionContext) {
       if (!editor) {
         return;
       }
+
+      if (editor.document.languageId === "go") {
+        vscode.window.showWarningMessage(
+          `language go is not supported for testFile. Use testLine instead.`
+        );
+        return;
+      }
+
       const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
       let command = getTestFileCommandByLanguageId(editor.document.languageId);
       if (command === "") {
@@ -88,26 +96,38 @@ export function activate(context: vscode.ExtensionContext) {
       }
       const path = vscode.workspace.asRelativePath(editor.document.uri.fsPath);
       const line = editor.selection.active.line + 1; // zero based + 1
+      let goTestNearestFuncName: string | null = null;
 
       if (editor.document.languageId === "go") {
-        const result = execFileSync(
-          "go",
-          [
-            "run",
-            "goTest/goTest.go",
-            "-filePath",
-            path,
-            "-line",
-            line.toString(),
-          ],
+        const absPath = editor.document.uri.fsPath;
+        const nearestTestPath = vscode.workspace
+          .getConfiguration("tespoyo")
+          .get<string>("goTestHelperNearestTestPath");
+        if (!nearestTestPath) {
+          vscode.window.showWarningMessage(
+            "tespoyo.goTestHelperNearestTestPath is not set"
+          );
+          return;
+        }
+        const result = spawnSync(
+          nearestTestPath,
+          ["-file", absPath, "-line", line.toString()],
           { encoding: "utf8" }
         );
 
-        const funcName = JSON.parse(result.toString()).FuncName;
-        console.log(funcName);
+        if (result.error) {
+          throw result.error;
+        }
 
-        await launchTestOnTerminal(funcName);
-        return;
+        if (result.status !== 0) {
+          vscode.window.showWarningMessage(
+            `could not find nearest test: ${result.stderr.toString().trim()}`
+          );
+          return;
+        }
+
+        const funcName = result.stdout.toString().trim();
+        goTestNearestFuncName = funcName;
       }
 
       let command = getTestLineCommandByLanguageId(editor.document.languageId);
@@ -117,8 +137,14 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       console.debug(path);
-      command = command.replace(/\$\{file\}/g, betterPath(path));
-      command = command.replace(/\$\{line\}/g, line.toString());
+
+      // dirty code...
+      if (goTestNearestFuncName) {
+        command = command.replace(/\$\{funcName\}/g, goTestNearestFuncName);
+      } else {
+        command = command.replace(/\$\{file\}/g, betterPath(path));
+        command = command.replace(/\$\{line\}/g, line.toString());
+      }
 
       await launchTestOnTerminal(command);
     })

@@ -27,6 +27,10 @@
           "tespoyo.testRootDirs": {
             "type": "array",
             "description": "test root directories (relative to workspace root). If the path starts with one of these directories, the directory will be trimmed from the path. Useful for monorepo."
+          },
+          "tespoyo.goTestHelperNearestTestPath": {
+            "type": "string",
+            "description": "path to the goTestHelper nearest test executable"
           }
         }
       }
