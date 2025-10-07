@@ -61,6 +61,10 @@ $ bundle exec rspec spec/foo_spec.rb
 
 ## Release Notes
 
+### 1.0.5
+
+goのテストコマンドを実行したいときに便利なオプション `tespoyo.goTestHelperNearestTestPath` を追加.
+
 ### 1.0.4
 
 monorepo環境でテストコマンドを実行したいときに便利なオプション `tespoyo.testRootDirs` を追加.
@@ -85,5 +89,7 @@ vsce publish
 
 ## TODO
 
+- [ ] integration test
 - [ ] js support
-- [ ] go support
+- [x] go support
+  - [ ] ヘルパーのバイナリを同封したい
