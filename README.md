@@ -43,6 +43,10 @@ example:
 
 ## Release Notes
 
+### 1.0.4
+
+monorepo環境でテストコマンドを実行したいときに便利なオプション `tespoyo.testRootDirs` を追加
+
 ### 1.0.3
 
 Workspace設定を入れてくれるコマンドを追加
